@@ -1,0 +1,37 @@
+Generate a Node.js + React web application for a company called EMI, which focuses exclusively on selling personalized clothing (t-shirts, polos, jackets, etc.). The requirements are:
+
+Personalized Apparel Sales Only: The website should list only customizable apparel products. Each product (t-shirt, polo, jacket, etc.) should be available for personalization.
+
+AI Co-Creation Feature: Integrate an AI-assisted co-creation tool. When a customer selects an item to customize, display an interactive co-creation panel. The tool should allow the user to design or modify the print (text or image) for the garment. It could use an AI service or API (e.g., an image generation or text-to-image model) to help generate or refine design options based on user input.
+
+Personalization Method Options: On the customization page for each garment, include a choice of personalization method. Provide options for Screen Printing and Heat Transfer (Flocking). These options should be selectable by the user before finalizing their design.
+
+Example Images: On each product page or customization interface, display a gallery of example images of that garment already personalized (showing different designs and methods). These serve as inspiration. The co-creation panel and customization options should appear alongside these example images (for example, a sidebar or carousel next to the main product image).
+
+User Accounts and Order Info: Implement user account creation and login (with persistent sessions or JWT). Users should register with an email, password, username, and location. Before placing an order (at the final checkout step), require that the user is logged in and has provided their email, password (i.e., an account is created), username, and location. Store this user information securely in the database (hash passwords).
+
+Database (Online): Use an online database (for example, MongoDB Atlas, Firebase, or similar) to store all data (users, products, orders). Do not use a local file or local-only database. Ensure the developer has access to this database (for example, provide connection details to a cloud DB). The database should store at least: product details, user accounts, and order details.
+
+Shopping Cart and Orders: Implement a shopping cart. At checkout, collect order details: selected product, color, quantity, personalization method, and any custom design input. Display prices in FCFA (Central African CFA franc). Do not integrate an online payment gateway; assume payment is "Cash on Delivery". After the order is submitted, display a confirmation message that includes "Delivery in 1 week".
+
+WhatsApp Integration: For customer support and order notifications, integrate WhatsApp:
+
+The "Contact Us" link or button on the site should open a WhatsApp chat with the number +237 699651854.
+
+After an order is placed, automatically generate a summary of the order and send it to +237 699651854 via WhatsApp. This summary should be in the form of an image (like a receipt) showing details such as product, color, quantity, personalization method, price, etc. Use a Node.js WhatsApp API or library (for example, Twilio API for WhatsApp or whatsapp-web.js) to send this image message programmatically.
+
+Design and UI: Style the website with a modern, appealing design that reflects EMI’s brand (focus on personalization). Draw inspiration from the DNIMAS Creative (dnimas-creative.com) and Ficelle (ficellesarl.com) websites:
+
+Include a dynamic hero section or banner that showcases personalized clothing and highlights customization (for example, a slogan like "Personalize Your Style with EMI" and an attractive background image).
+
+Use high-quality, engaging images of custom-designed apparel throughout the site.
+
+The color scheme and layout should be vibrant and professional. Incorporate the EMI logo and branding colors prominently.
+
+Ensure intuitive navigation: a clear menu (e.g., Home, About, Products, Contact). The site should feel user-friendly and highlight the personalization experience.
+
+Add any additional interactive features (like product filters, live preview of customization, tooltips) to improve user experience and emphasize personalization.
+
+Technology Stack: Use Node.js for the backend (API, database, WhatsApp integration) and React for the frontend (UI). Automate all necessary workflows (for example, when an order is placed, automatically send the WhatsApp notification). Ensure the site supports user login persistence and secure password handling.
+
+Generate all necessary code (frontend and backend) and configuration files to create this fully functional web application according to the above specifications.
