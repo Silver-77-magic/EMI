@@ -75,10 +75,11 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // ⚠️ IMPORTANT : NE PAS utiliser 0.0.0.0 en local sous Windows
-  const port = parseInt(process.env.PORT || "5000", 10);
+  // ✅ Render / production compatible
+  const port = Number(process.env.PORT || 5000);
 
-  httpServer.listen(port, "127.0.0.1", () => {
-    log(`serving on http://localhost:${port}`);
+  httpServer.listen(port, "0.0.0.0", () => {
+    log(`serving on port ${port}`);
   });
 })();
+
