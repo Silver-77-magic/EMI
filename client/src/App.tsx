@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -33,6 +34,20 @@ function Router() {
 }
 
 function App() {
+  // 🔍 TEST API (TEMPORAIRE)
+  useEffect(() => {
+    console.log("✅ App monté");
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/products`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("✅ Produits depuis l’API :", data);
+      })
+      .catch(err => {
+        console.error("❌ Erreur fetch API :", err);
+      });
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
