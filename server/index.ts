@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import cors from "cors";
 
 const app = express();
 const httpServer = createServer(app);
@@ -12,12 +13,27 @@ declare module "http" {
   }
 }
 
+// 🔐 CORS — autorise le frontend Vercel
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://emi-mw9j.vercel.app",
+      "https://emi-mw9j.vercel.app/",
+    ],
+    credentials: true,
+  })
+);
+
+// ✅ Preflight (OPTIONS)
+app.options("*", cors());
+
 app.use(
   express.json({
     verify: (req, _res, buf) => {
       (req as any).rawBody = buf;
     },
-  }),
+  })
 );
 
 app.use(express.urlencoded({ extended: false }));
@@ -29,7 +45,6 @@ export function log(message: string, source = "express") {
     second: "2-digit",
     hour12: true,
   });
-
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
@@ -75,11 +90,9 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // ✅ Render / production compatible
+  // 🚀 Render compatible
   const port = Number(process.env.PORT || 5000);
-
   httpServer.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
   });
 })();
-
