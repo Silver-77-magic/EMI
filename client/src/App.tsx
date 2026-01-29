@@ -34,16 +34,16 @@ function Router() {
 }
 
 function App() {
-  // 🔍 TEST API (TEMPORAIRE)
+  // 🔎 TEST BACKEND → FRONTEND
   useEffect(() => {
     console.log("✅ App monté");
 
     fetch(`${import.meta.env.VITE_API_URL}/api/products`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log("✅ Produits depuis l’API :", data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("❌ Erreur fetch API :", err);
       });
   }, []);
