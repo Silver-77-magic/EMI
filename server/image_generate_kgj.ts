@@ -6,6 +6,24 @@ const openai = new OpenAI({
 });
 
 export function registerImageGenerateKGJ(app: Express) {
+  // 🔎 DEBUG OPENAI — vérifie clé / quota / accès
+  app.get("/api/debug-openai", async (_req, res) => {
+    try {
+      const test = await openai.models.list();
+      return res.json({
+        ok: true,
+        models: test.data.slice(0, 3).map((m) => m.id),
+      });
+    } catch (error: any) {
+      console.error("❌ OPENAI DEBUG ERROR:", error);
+      return res.status(500).json({
+        ok: false,
+        message: error?.message,
+      });
+    }
+  });
+
+  // 🎨 GÉNÉRATION D’IMAGE
   app.post("/api/generate-image", async (req, res) => {
     try {
       const { prompt } = req.body;
