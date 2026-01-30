@@ -6,7 +6,7 @@ const openai = new OpenAI({
 });
 
 export function registerImageGenerateKGJ(app: Express) {
-  // 🔎 DEBUG OPENAI — vérifie clé / quota / accès
+  // 🔎 DEBUG OPENAI (optionnel mais utile)
   app.get("/api/debug-openai", async (_req, res) => {
     try {
       const test = await openai.models.list();
@@ -23,7 +23,7 @@ export function registerImageGenerateKGJ(app: Express) {
     }
   });
 
-  // 🎨 GÉNÉRATION D’IMAGE
+  // 🎨 GÉNÉRATION D’IMAGE (DALL·E 3)
   app.post("/api/generate-image", async (req, res) => {
     try {
       const { prompt } = req.body;
@@ -35,7 +35,7 @@ export function registerImageGenerateKGJ(app: Express) {
       }
 
       const result = await openai.images.generate({
-        model: "gpt-image-1",
+        model: "dall-e-3",
         prompt,
         size: "1024x1024",
       });
@@ -44,15 +44,13 @@ export function registerImageGenerateKGJ(app: Express) {
 
       if (!imageUrl) {
         return res.status(500).json({
-          message: "Aucune image générée par OpenAI",
+          message: "Aucune image générée",
         });
       }
 
       return res.json({ imageUrl });
     } catch (error: any) {
-      console.error("❌ IMAGE GENERATION ERROR MESSAGE:", error?.message);
-      console.error("❌ IMAGE GENERATION ERROR FULL:", error);
-
+      console.error("❌ IMAGE GENERATION ERROR:", error?.message);
       return res.status(500).json({
         message: "Erreur lors de la génération de l’image",
         debug: error?.message,
