@@ -31,10 +31,13 @@ export function registerImageGenerateKGJ(app: Express) {
       }
 
       return res.json({ imageUrl });
-    } catch (error) {
-      console.error("❌ Image generation error:", error);
+    } catch (error: any) {
+      console.error("❌ IMAGE GENERATION ERROR MESSAGE:", error?.message);
+      console.error("❌ IMAGE GENERATION ERROR FULL:", error);
+
       return res.status(500).json({
         message: "Erreur lors de la génération de l’image",
+        debug: error?.message,
       });
     }
   });
