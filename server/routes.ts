@@ -1,6 +1,6 @@
 import { registerImageGenerateKGJ } from "./image_generate_kgj";
 import type { Express } from "express";
-import { createServer, type Server } from "http";
+import { type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
@@ -14,10 +14,10 @@ export async function registerRoutes(
 ): Promise<Server> {
   setupAuth(app);
 
-  // 🔥 IA — Génération d’images (TON ENDPOINT)
+  // 🔥 IA — Génération d’images
   registerImageGenerateKGJ(app);
 
-  // Register AI Integrations (Replit)
+  // AI Integrations
   registerChatRoutes(app);
   registerImageRoutes(app);
 
@@ -40,16 +40,17 @@ export async function registerRoutes(
     if (!req.isAuthenticated()) return res.sendStatus(401);
 
     try {
+      const userId = (req.user as any).id;
       const { items, totalAmount } = req.body;
+
       const order = await storage.createOrder(
-        req.user!.id,
+        userId,
         totalAmount,
         items
       );
 
-      // Mock WhatsApp notification
       console.log(
-        `[WhatsApp Mock] Sending order summary to +237 699651854 for Order #${order.id}`
+        `[WhatsApp Mock] Sending order summary for Order #${order.id}`
       );
 
       res.status(201).json(order);
@@ -63,69 +64,11 @@ export async function registerRoutes(
 
   app.get(api.orders.list.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const orders = await storage.getOrdersByUser(req.user!.id);
+
+    const userId = (req.user as any).id;
+    const orders = await storage.getOrdersByUser(userId);
     res.json(orders);
   });
 
   return httpServer;
 }
-
-// Seed function
-async function seedDatabase() {
-  const existingProducts = await storage.getProducts();
-  if (existingProducts.length === 0) {
-    const productsToSeed = [
-      {
-        name: "Premium Cotton T-Shirt",
-        description:
-          "High-quality 100% cotton t-shirt, perfect for custom prints.",
-        price: 5000,
-        category: "t-shirt",
-        imageUrl:
-          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
-        customizationOptions: {
-          methods: ["Screen Printing", "Flocking"],
-          colors: ["White", "Black", "Navy", "Red"],
-          sizes: ["S", "M", "L", "XL"],
-        },
-      },
-      {
-        name: "Classic Polo Shirt",
-        description:
-          "Elegant polo shirt suitable for professional branding.",
-        price: 7500,
-        category: "polo",
-        imageUrl:
-          "https://images.unsplash.com/photo-1625910515337-3f9c3469a51c?w=800&q=80",
-        customizationOptions: {
-          methods: ["Screen Printing", "Flocking"],
-          colors: ["White", "Black", "Blue"],
-          sizes: ["S", "M", "L", "XL", "XXL"],
-        },
-      },
-      {
-        name: "Urban Hoodie Jacket",
-        description:
-          "Warm and stylish hoodie, great for large back prints.",
-        price: 15000,
-        category: "jacket",
-        imageUrl:
-          "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80",
-        customizationOptions: {
-          methods: ["Screen Printing", "Flocking"],
-          colors: ["Grey", "Black", "Navy"],
-          sizes: ["M", "L", "XL"],
-        },
-      },
-    ];
-
-    const { products } = await import("@shared/schema");
-    const { db } = await import("./db");
-
-    await db.insert(products).values(productsToSeed);
-    console.log("Seeded database with products");
-  }
-}
-
-// Execute seeding after a short delay to ensure DB is ready
-setTimeout(seedDatabase, 2000);

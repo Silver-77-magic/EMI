@@ -22,9 +22,15 @@ export function registerImageGenerateKGJ(app: Express) {
         size: "1024x1024",
       });
 
-      return res.json({
-        imageUrl: result.data[0].url,
-      });
+      const imageUrl = result.data?.[0]?.url;
+
+      if (!imageUrl) {
+        return res.status(500).json({
+          message: "Aucune image générée par OpenAI",
+        });
+      }
+
+      return res.json({ imageUrl });
     } catch (error) {
       console.error("❌ Image generation error:", error);
       return res.status(500).json({
